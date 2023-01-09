@@ -4,23 +4,34 @@
   background: $background2;
   position: fixed;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   width: 100%;
 
   .main-navbar {
-    padding: 0 30px;
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 70px;
+    position: relative;
 
     .brand-container {
-      height: 100px;
       display: flex;
       align-items: center;
       margin-right: 30px;
       text-decoration: none;
-
+      position: relative;
+      .Public-Beta {
+        font-size: 9px;
+        position: absolute;
+        top: -16px;
+        right: -14px;
+        color: #fff;
+        background: #7e29ff;
+        padding: 1px 10px;
+        font-weight: 300;
+        border-radius: 20px;
+      }
       img {
         width: 25px;
         height: auto;
@@ -93,7 +104,7 @@
       }
       .dropdown-options {
         background: $background2;
-        border-radius: 25px;
+        border-radius: 5px;
         position: absolute;
         list-style: none;
         display: flex;
@@ -178,7 +189,7 @@
   .app-navbar {
     .main-navbar {
       .sidebar-open-btn {
-        display: block;
+        // display: block;
       }
 
       .brand-container {
@@ -192,7 +203,12 @@
 
 @media only screen and (max-width: 620px) {
   .app-navbar {
+    .Public-Beta {
+      top: 4px !important;
+      right: -88px !important;
+    }
     .main-navbar {
+      margin-left: 30px;
       .brand-container {
         margin-right: auto;
       }

@@ -37,6 +37,7 @@ impl FungibleTokenReceiver for Contract {
                 ft_token_id,
                 price,
                 sender_id,
+                sale.owner_id.clone()
             ).into()
         } else {
             if sale.is_auction && price.0 > 0 {

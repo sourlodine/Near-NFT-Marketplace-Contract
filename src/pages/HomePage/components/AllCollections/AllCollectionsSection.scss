@@ -1,4 +1,4 @@
-@import '../../../../sass/variables.scss';
+@import "../../../../sass/variables.scss";
 
 .home-collections-section {
   .section-padding {
@@ -6,6 +6,9 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 40px;
+      button {
+        min-width: 100px;
+      }
     }
 
     .cards-container {
@@ -20,7 +23,6 @@
   .home-collections-section {
     .section-padding {
       .head {
-
       }
 
       .cards-container {

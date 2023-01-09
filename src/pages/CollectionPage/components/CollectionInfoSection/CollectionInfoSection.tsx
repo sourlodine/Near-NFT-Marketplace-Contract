@@ -1,4 +1,4 @@
-import React from "react"
+import { useEffect, useState } from "react"
 import DiscordIcon from "../../../../assets/icons/DiscordIcon"
 import InstagramIcon from "../../../../assets/icons/InstagramIcon"
 import MediumIcon from "../../../../assets/icons/MediumIcon"
@@ -7,17 +7,30 @@ import TwitterIcon from "../../../../assets/icons/TwitterIcon"
 import VerifiedIcon from "../../../../assets/icons/VerifiedIcon"
 import WebsiteIcon from "../../../../assets/icons/WebsiteIcon"
 import BodyText from "../../../../components/BodyText/BodyText"
+import { getCollectionStat } from "../../../../contexts/transaction"
 import { TCollection, TCollectionContractDetails } from "../../CollectionPage"
 import "./CollectionInfoSection.scss"
 
 interface CollectionInfoSectionProps {
   collectionMarketplaceDetails: TCollection | null
   collectionContractDetails: TCollectionContractDetails
-  isLoading: boolean
+  isLoading: boolean,
+  collectionId: string
 }
 const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
-  const { collectionMarketplaceDetails, collectionContractDetails, isLoading } =
-    props
+  const { collectionMarketplaceDetails, collectionContractDetails, collectionId } = props
+  const [totaValue, setTotalValue] = useState("--");
+  const getAllCollections = async () => {
+    const all = await getCollectionStat();
+    for (let item of all) {
+      if (item.collectionId === collectionId) {
+        setTotalValue(`${(item.volumeTotal.toLocaleString()).toString()} Ⓝ`)
+      }
+    }
+  }
+  useEffect(() => {
+    getAllCollections();
+  }, [])
   return (
     <div className="collection-info-section">
       <div className="banner-section">
@@ -110,24 +123,27 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
       </div>
       <div className="collection-stats-container">
         <div className="stat-set">
-          <BodyText bold>{collectionContractDetails?.numberOfItems}</BodyText>
+          {collectionContractDetails?.numberOfItems ?
+            <BodyText bold>{collectionContractDetails?.numberOfItems}</BodyText>
+            :
+            <p className="body-text bold">--</p>
+          }
           <BodyText light>Items</BodyText>
         </div>
         <div className="stat-set">
-          <BodyText bold>{collectionContractDetails?.owners}</BodyText>
-          <BodyText light>Owners</BodyText>
-        </div>
-        <div className="stat-set">
-          <BodyText bold>
-            {collectionContractDetails?.floorPrice}
-            <span style={{ marginLeft: "5px" }}>Ⓝ</span>
-          </BodyText>
+          {collectionContractDetails?.floorPrice ?
+            <BodyText bold>
+              {collectionContractDetails?.floorPrice}
+              <span style={{ marginLeft: "5px" }}>Ⓝ</span>
+            </BodyText>
+            :
+            <p className="body-text bold">--</p>
+          }
           <BodyText light>Floor price</BodyText>
         </div>
         <div className="stat-set">
           <BodyText bold>
-            {collectionContractDetails?.volTraded}
-            <span style={{ marginLeft: "5px" }}>Ⓝ</span>
+            <span style={{ marginLeft: "5px" }}>{totaValue}</span>
           </BodyText>
           <BodyText light>Volume traded</BodyText>
         </div>

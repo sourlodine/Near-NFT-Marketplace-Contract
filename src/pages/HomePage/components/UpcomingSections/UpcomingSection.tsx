@@ -1,7 +1,7 @@
 import React from 'react';
 import BodyText from '../../../../components/BodyText/BodyText';
 import Button from '../../../../components/Button/Button';
-import ImageWithLoadBg from '../../../../components/ImageWithLoadBg/ImageWithLoadBg';
+import ImageWithLoadBgHome from '../../../../components/ImageWithLoadBg/ImageWithLoadBgHome';
 import SectionPadding from '../../../../components/SectionPadding/SectionPadding';
 import './UpcomingSection.scss';
 
@@ -11,46 +11,45 @@ type TUpcomingLaunches = {
   name: string;
   link: string;
 }
-
 const defaultUpcomingLaunches: TUpcomingLaunches[] = [
   {
-    image: require('../../../../assets/images/defaultUpcomingLaunch1.png'),
+    image: require('../../../../assets/images/upcomming/Nearbiez.png'),
     date: "25 Dec 2022",
-    name: "Fury Club for Metaverse",
-    link: "https://www.facebook.com",
+    name: "Nearbiez",
+    link: "https://twitter.com/Nearbiez",
   },
   {
-    image: require('../../../../assets/images/defaultUpcomingLaunch2.png'),
+    image: require('../../../../assets/images/upcomming/haven.jpg'),
     date: "25 Dec 2022",
-    name: "Futurstic Game",
-    link: "https://www.facebook.com",
+    name: "Haven",
+    link: "https://twitter.com/TheHavenDAO",
   },
   {
-    image: require('../../../../assets/images/defaultUpcomingLaunch3.png'),
+    image: require('../../../../assets/images/upcomming/Apesempire.jpg'),
     date: "25 Dec 2022",
-    name: "Virtual Reality",
-    link: "https://www.facebook.com",
+    name: "Apes Empire",
+    link: "https://twitter.com/empire_apes",
   },
-  
+
 ]
 
 const UpcomingSection = () => {
-  return(
+  return (
     <div className="home-upcoming-section">
       <SectionPadding>
         <div className="head">
           <BodyText className="section-title-text">Upcoming Launches</BodyText>
-          <Button title="See all" secondary onClick={ () => {} }/>
+          <Button title="See all" secondary onClick={() => { }} disabled={false} />
         </div>
         <div className="cards-container">
           {
             defaultUpcomingLaunches.map((launch, i) => (
-              <a href={launch.link} target="_blank" rel="noreferrer" className="upcoming-launch-card">
-                <ImageWithLoadBg aspectRatio={0.9375} src={launch.image} alt={launch.name}/>
+              <a href={launch.link} target="_blank" rel="noreferrer" className="upcoming-launch-card" key={i}>
+                <ImageWithLoadBgHome aspectRatio={0.9375} src={launch.image} alt={launch.name} />
                 <div className="img-darkener" />
                 <div className="details">
                   <BodyText bold className="name">{launch.name}</BodyText>
-                  <BodyText light className="date">{launch.date}</BodyText>
+                  {/* <BodyText light className="date">{launch.date}</BodyText> */}
                 </div>
               </a>
             ))

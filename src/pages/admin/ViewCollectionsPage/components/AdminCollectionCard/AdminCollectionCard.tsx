@@ -17,7 +17,7 @@ const AdminCollectionCard = (props: AdminCollectionCardProps) => {
   const { image, name, id, onDeleteClick, onEditClick } = props
   return (
     <div className="admin-collection-card">
-      <ImageWithLoadBg aspectRatio={1.386} src={image} alt={name} />
+      <ImageWithLoadBg aspectRatio={1} src={image} alt={name} />
       <div className="details-container">
         <BodyText className="collection-name" bold>
           {name}

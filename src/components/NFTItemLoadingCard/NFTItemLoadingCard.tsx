@@ -3,9 +3,9 @@ import ImageWithLoadBg from '../ImageWithLoadBg/ImageWithLoadBg';
 import './NFTItemLoadingCard.scss';
 
 const NFTItemLoadingCard = () => {
-  return(
+  return (
     <div className="nft-item-loading-card">
-      <ImageWithLoadBg aspectRatio={1.386} src='' alt='' />
+      <ImageWithLoadBg aspectRatio={1} src='' alt='' />
       <div className="details-container">
         <div className="collection-and-price-container">
           <div className="collection-name" />
@@ -13,7 +13,7 @@ const NFTItemLoadingCard = () => {
         </div>
         <div className="item-name" />
       </div>
-    </div>     
+    </div>
   )
 }
 

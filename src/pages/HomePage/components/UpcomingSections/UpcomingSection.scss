@@ -1,4 +1,4 @@
-@import '../../../../sass/variables.scss';
+@import "../../../../sass/variables.scss";
 
 .home-upcoming-section {
   .section-padding {
@@ -7,6 +7,9 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 40px;
+      button {
+        min-width: 100px;
+      }
     }
 
     .cards-container {
@@ -25,8 +28,10 @@
 
         .img-darkener {
           position: absolute;
-          top: 0; bottom: 0;
-          right: 0; left: 0;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
           background: linear-gradient(180deg, rgba(9, 6, 25, 0) 0%, rgba(9, 6, 25, 0.94) 100%);
           z-index: 1;
         }
@@ -42,7 +47,7 @@
           }
 
           .date {
-            font-size: 14px;
+            font-size: 13px;
             color: $text-color-gray;
           }
         }
@@ -55,7 +60,6 @@
   .home-upcoming-section {
     .section-padding {
       .head {
-
       }
 
       .cards-container {

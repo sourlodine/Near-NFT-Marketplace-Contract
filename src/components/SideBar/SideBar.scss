@@ -1,8 +1,9 @@
-@import '../../sass/variables.scss';
-
-
+@import "../../sass/variables.scss";
+.sidebar-container {
+  position: relative;
+}
 @mixin collapsed {
-  width: 80px;
+  width: 60px;
 
   .brand-container {
     .body-text {
@@ -53,26 +54,76 @@
   flex-direction: column;
   width: 200px;
   overflow: hidden;
-  transition: all .5s;
+  transition: all 0.5s;
   background: $background2;
-  top: 108px;
-  height: calc(100vh - 100px);
-  
+  top: 70px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  .comming-soon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span.alert-text {
+      margin-left: 5px;
+      font-size: 9px;
+      color: #fff;
+      text-align: center;
+      font-weight: 300;
+      border: 1px solid #ffffff1a;
+      border-radius: 6px;
+      width: 60px;
+      padding: 2px 0;
+    }
+  }
+  .sidebar-dropdown {
+    .sidebar-dropdown-title {
+      display: flex;
+      justify-content: space-between;
+      padding-left: 10px;
+      cursor: pointer;
+      .title-main {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .sidebar-dropdown-content {
+      padding-left: 30px;
+      a {
+        font-size: 14px;
+        color: rgba(219, 219, 219, 0.65);
+        padding: 8px 0;
+        transition: all 0.3s;
+        &:hover {
+          color: #fff;
+          transition: all 0.3s;
+        }
+      }
+    }
+    button {
+      border: none;
+      background: transparent;
+    }
+  }
   .items-container {
     list-style: none;
     padding: 0;
 
     li {
-      margin-bottom: 10px;
+      margin: 10px;
+      border-radius: 6px;
 
       &:hover {
         .body-text {
           color: white;
         }
       }
+      svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
 
       &.selected {
-        background: $gradient;
+        background: linear-gradient(270deg, #2b1447 0%, #132045 102.96%);
 
         .body-text {
           color: white;
@@ -85,14 +136,14 @@
         display: flex;
         align-items: center;
         text-decoration: none;
-        padding:  15px 30px;
+        padding: 10px 10px;
       }
 
       .body-text {
         margin-left: 15px;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 24px;
-        transition: all .5s;
+        transition: all 0.5s;
       }
     }
   }
@@ -116,7 +167,7 @@
       align-items: center;
       cursor: pointer;
       padding: 10px;
-      
+
       img {
         width: 25px;
         height: 25px;
@@ -127,12 +178,11 @@
       .body-text {
         margin-right: 10px;
         font-size: 13px;
-      }      
+      }
     }
 
     .expand-btn {
       background: rgba(0, 0, 0, 0);
-      transition: all .5s;
       width: fit-content;
       display: flex;
       align-items: center;
@@ -141,7 +191,9 @@
       width: 40px;
       border-radius: 5px;
       cursor: pointer;
-
+      &.r-180 {
+        transform: rotate(180deg);
+      }
       &:hover {
         background: black;
       }
@@ -158,7 +210,7 @@
     .bottom-section {
       .expand-btn {
         display: none;
-      }      
+      }
     }
   }
 }
@@ -170,7 +222,7 @@
     .bottom-section {
       .expand-btn {
         display: none;
-      }      
+      }
     }
   }
 }
@@ -180,27 +232,48 @@
     position: fixed;
     bottom: 0;
     background: $background2;
-    width: 280px;  
+    width: 280px;
     z-index: 100;
     transform: translateX(-100%);
 
     &.show-mobile {
       transform: translateX(0);
-    }    
-
-    &.collapsed {
-      
     }
 
+    &.collapsed {
+    }
   }
 }
-
+.desktop-sidebar {
+  display: flex !important;
+}
+.mobile-sidebar {
+  display: none !important;
+}
+.mobile-handler {
+  display: none !important;
+}
 @media only screen and (max-width: 620px) {
-  .side-bar {    
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-sidebar {
+    display: flex !important;
+  }
+  .side-bar {
     .bottom-section {
       .connect-wallet {
         display: flex;
-      }      
+      }
     }
+  }
+  .mobile-handler {
+    cursor: pointer;
+    position: fixed;
+    z-index: 3510;
+    top: 27px;
+    left: 11px;
+    visibility: initial;
+    display: block !important;
   }
 }

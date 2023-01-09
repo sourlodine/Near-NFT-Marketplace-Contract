@@ -18,6 +18,13 @@ import TelegramIcon from "../../assets/icons/TelegramIcon"
 import TwitterIcon from "../../assets/icons/TwitterIcon"
 import WalletIcon from "../../assets/icons/WalletIcon"
 import WebsiteIcon from "../../assets/icons/WebsiteIcon"
+import ProfileIcon from "../../assets/icons/ProfileIcon"
+import ApplyIcon from "../../assets/icons/ApplyIcon"
+import JobIcon from "../../assets/icons/JobIcon"
+import CommunityIcon from "../../assets/icons/CommunityIcon"
+import AuctionsIcon from "../../assets/icons/AuctionsIcon"
+import LanchpadIcon from "../../assets/icons/LanchpadIcon"
+import LoadingCircleIcon1 from "../../assets/icons/LoadingCircleIcon1"
 // import solanaIcon from "../../images/solanaIcon.png";
 // import usdcIcon from "../../images/USDCIcon.png";
 
@@ -44,6 +51,8 @@ const resolveIcon = (props: IconLoaderProps): React.ReactNode => {
       return <CancelIcon />
     case "loading":
       return <LoadingCircleIcon />
+    case "loading1":
+      return <LoadingCircleIcon1 />
     case "creditCard":
       return <CreditCardIcon />
     case "home":
@@ -66,10 +75,25 @@ const resolveIcon = (props: IconLoaderProps): React.ReactNode => {
       return <EditIcon />
     case "delete":
       return <DeleteIcon />
+    case "job":
+      return <JobIcon />
+    case "apply":
+      return <ApplyIcon />
+    case "community":
+      return <CommunityIcon />
+    case "auctions":
+      return <AuctionsIcon />
+    case "lanchpad":
+      return <LanchpadIcon />
+    case "profile":
+      return <ProfileIcon isSelected={props.isIconSelected} />
+
     default:
       return <div />
   }
 }
+
+// Home, Collections, Stats, Jobs, Apply lisiting, Community, Auctions,  Launchpad
 
 const IconLoader = ({ icon, isIconSelected = false }: IconLoaderProps) => {
   return (

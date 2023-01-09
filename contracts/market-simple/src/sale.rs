@@ -102,18 +102,31 @@ impl Contract {
                 ft_token_id,
                 U128(deposit),
                 buyer_id,
+                sale.owner_id.clone()
             );
         } else {
             if sale.is_auction && price > 0 {
-                assert!(deposit >= price, "Attached deposit must be greater than reserve price");
+                assert!(deposit <= price, "Attached deposit must be lesser than reserve price");
             }
-            self.add_bid(
-                contract_and_token_id,
-                deposit,
-                ft_token_id,
-                buyer_id,
-                &mut sale,
-            );
+
+            if deposit == price {
+                self.process_purchase(
+                    contract_id,
+                    token_id,
+                    ft_token_id,
+                    U128(deposit),
+                    buyer_id,
+                    sale.owner_id.clone()
+                );
+            } else {
+                self.add_bid(
+                    contract_and_token_id,
+                    deposit,
+                    ft_token_id,
+                    buyer_id,
+                    &mut sale,
+                );
+            }
         }
     }
 
@@ -175,6 +188,7 @@ impl Contract {
         let mut sale = self.sales.get(&contract_and_token_id).expect("No sale");
         let bids_for_token_id = sale.bids.remove(ft_token_id.as_ref()).expect("No bids");
         let bid = &bids_for_token_id[bids_for_token_id.len()-1];
+        let owner_id = sale.owner_id.clone();
         self.sales.insert(&contract_and_token_id, &sale);
         // panics at `self.internal_remove_sale` and reverts above if predecessor is not sale.owner_id
         self.process_purchase(
@@ -183,6 +197,7 @@ impl Contract {
             ft_token_id.into(),
             bid.price,
             bid.owner_id.clone(),
+            owner_id,
         );
     }
 
@@ -194,6 +209,7 @@ impl Contract {
         ft_token_id: AccountId,
         price: U128,
         buyer_id: AccountId,
+        owner_id: AccountId
     ) -> Promise {
         let sale = self.internal_remove_sale(nft_contract_id.clone(), token_id.clone());
 
@@ -202,7 +218,7 @@ impl Contract {
             token_id,
             sale.approval_id,
             "payout from market".to_string(),
-            price,
+            U128::from(u128::from(price).checked_div(100).unwrap().checked_mul(100 - u128::from(self.marketplace_charge)).unwrap()),
 			10,
             &nft_contract_id,
             1,
@@ -212,7 +228,8 @@ impl Contract {
             ft_token_id,
             buyer_id,
             sale,
-            price,
+            U128::from(u128::from(price).checked_div(100).unwrap().checked_mul(100 - u128::from(self.marketplace_charge)).unwrap()),
+            owner_id,
             &env::current_account_id(),
             NO_DEPOSIT,
             GAS_FOR_ROYALTIES,
@@ -228,8 +245,9 @@ impl Contract {
         buyer_id: AccountId,
         sale: Sale,
         price: U128,
+        owner_id: AccountId,
     ) -> U128 {
-
+        let marketplace_id = env::current_account_id();
         // checking for payout information
         let payout_option = promise_result_as_success().and_then(|value| {
             // None means a bad payout from bad NFT contract
@@ -237,13 +255,13 @@ impl Contract {
                 .ok()
                 .and_then(|payout| {
                     // gas to do 10 FT transfers (and definitely 10 NEAR transfers)
-                    if payout.len() + sale.bids.len() > 10 || payout.is_empty() {
+                    if payout.payout.len() + sale.bids.len() > 10 || payout.payout.is_empty() {
                         env::log(format!("Cannot have more than 10 royalties and sale.bids refunds").as_bytes());
                         None
                     } else {
                         // TODO off by 1 e.g. payouts are fractions of 3333 + 3333 + 3333
                         let mut remainder = price.0;
-                        for &value in payout.values() {
+                        for &value in payout.payout.values() {
                             remainder = remainder.checked_sub(value.0)?;
                         }
                         if remainder == 0 || remainder == 1 {
@@ -254,12 +272,13 @@ impl Contract {
                     }
                 })
         });
+        
         // is payout option valid?
         let payout = if let Some(payout_option) = payout_option {
             payout_option
         } else {
             if ft_token_id == "near" {
-                Promise::new(buyer_id).transfer(u128::from(price));
+                Promise::new(owner_id).transfer(u128::from(price));
             }
             // leave function and return all FTs in ft_resolve_transfer
             return price;
@@ -269,22 +288,37 @@ impl Contract {
 
         // NEAR payouts
         if ft_token_id == "near" {
-            for (receiver_id, amount) in payout {
-                Promise::new(receiver_id).transfer(amount.0);
+            for (receiver_id, amount) in payout.payout {
+                if receiver_id == marketplace_id{
+                    Promise::new(owner_id.clone()).transfer(amount.0);
+                } else {
+                    Promise::new(receiver_id).transfer(amount.0);
+                }
             }
             // refund all FTs (won't be any)
             price
         } else {
             // FT payouts
-            for (receiver_id, amount) in payout {
-                ext_contract::ft_transfer(
-                    receiver_id,
-                    amount,
-                    None,
-                    &ft_token_id,
-                    1,
-                    GAS_FOR_FT_TRANSFER,
-                );
+            for (receiver_id, amount) in payout.payout {
+                if receiver_id == marketplace_id{
+                    ext_contract::ft_transfer(
+                        owner_id.clone(),
+                        amount,
+                        None,
+                        &ft_token_id,
+                        1,
+                        GAS_FOR_FT_TRANSFER,
+                    );
+                } else {
+                    ext_contract::ft_transfer(
+                        receiver_id,
+                        amount,
+                        None,
+                        &ft_token_id,
+                        1,
+                        GAS_FOR_FT_TRANSFER,
+                    );
+                }
             }
             // keep all FTs (already transferred for payouts)
             U128(0)
@@ -302,5 +336,6 @@ trait ExtSelf {
         buyer_id: AccountId,
         sale: Sale,
         price: U128,
+        owner_id: AccountId,
     ) -> Promise;
 }

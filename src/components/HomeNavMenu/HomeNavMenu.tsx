@@ -1,17 +1,17 @@
-import React from 'react';
 import Button from '../Button/Button';
 import { IconLoader } from '../IconLoader';
 import './HomeNavMenu.scss';
 
 type TLink = {
   name: string;
-  onClick: () => void;
+  link: string;
 }
 
 interface HomeNavMenuProps {
   links: TLink[];
   showMobileNavMenu: boolean;
   setShowMobileNavMenu: Function;
+  signIn: Function;
 }
 
 const HomeNavMenu = (props: HomeNavMenuProps) => {
@@ -20,19 +20,21 @@ const HomeNavMenu = (props: HomeNavMenuProps) => {
       `home-nav-menu ${props.showMobileNavMenu ? "show" : ""}`
     }>
       <div className="close-btn-container">
-        <div onClick={ () => props.setShowMobileNavMenu(false)} className="close-btn">
+        <div onClick={() => props.setShowMobileNavMenu(false)} className="close-btn">
           <IconLoader icon="cancel" />
-        </div>        
+        </div>
       </div>
-      <ul className="menu-links">
+      {/* <ul className="menu-links">
         {
           props.links.map((link, i) => (
-            <li onClick={link.onClick}>{link.name}</li>
+            <Link to={link.link} key={i} style={{ color: "#b3b9c4" }}>{link.name}</Link>
           ))
         }
-      </ul>
+      </ul> */}
       <div className="wallet-btn-container">
-        <Button icon="wallet" title="Connect wallet" onClick={ () => {} } />
+        <Button icon="wallet" title="Connect wallet"
+          onClick={()=> props.signIn()}
+          disabled={false} />
       </div>
     </div>
   )

@@ -1,9 +1,9 @@
-.image-with-Bg{
+.image-with-Bg {
     position: relative;
-    background-color: #C4C4C4;
+    background-color: #c4c4c4;
     width: 100%;
 
-    .image{
+    .image {
         position: absolute;
         top: 0;
         left: 0;
@@ -14,10 +14,11 @@
         align-items: center;
         overflow: hidden;
 
-        img{
+        img {
             width: 100%;
-            height: auto;
-            transition: all .5s;
+            height: 100%;
+            transition: all 0.5s;
+            object-fit: cover;
         }
     }
 }
