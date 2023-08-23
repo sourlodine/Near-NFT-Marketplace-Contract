@@ -189,7 +189,11 @@ impl Contract {
         let bids_for_token_id = sale.bids.remove(ft_token_id.as_ref()).expect("No bids");
         let bid = &bids_for_token_id[bids_for_token_id.len()-1];
         let owner_id = sale.owner_id.clone();
-        self.sales.insert(&contract_and_token_id, &sale);
+	assert!(
+		env::current_account_id() == owner_id.clone(),
+		"Invalid Authorization"
+	);
+    	self.sales.insert(&contract_and_token_id, &sale);
         // panics at `self.internal_remove_sale` and reverts above if predecessor is not sale.owner_id
         self.process_purchase(
             contract_id,
